@@ -287,65 +287,114 @@ void imprimirEmOrdem(PONT no){
 }
 
 int main(){
-    int i;
-    clock_t tempoInicial, tempoInsercao, tempoBusca, tempoRemocao;
-
+    int i, x;
+    //clock_t tempo, tempoInicial, tempoFinal, tempoInsercao, tempoBusca, tempoRemocao;
+    clock_t tempoInicial, tempoFinal;
     PONT r = iniciar();
 
-    int *v, *vBusca, *vRemocao, n;
+    int *v, n;
     printf("Digite a quantidade de elementos: ");
     scanf("%d%*c", &n);
     v = (int*) malloc(sizeof(int*) * n);
-    vBusca = (int*) malloc(sizeof(int*) * n);
-    vRemocao = (int*) malloc(sizeof(int*) * n);
 
     srand(time(NULL));
 
-    for(int j = 0; j < 30; j++){
-
-
-
-            for(i = 0; i < n; i++){
-                v[i] = rand() % 100;
-                vBusca[i] = rand() % 100;
-                vRemocao[i] = rand() % 100;
-            }
-
-            tempoInicial = clock();//Tempo de exec. desde o início do programa
-            //printf("t1: %lf\n", ((double)tempoInicial)/((CLOCKS_PER_SEC/1000)));
-            for(i = 0; i < n; i++){
-                PONT no = criarNovoNo(v[i]);
-                r = adicionar(r, no);
-                //printf("%d\n", v[i]);
-            }
-            tempoInsercao = clock() - tempoInicial;//Tempo de exec. do procedimento de inserção, conforme a quantidade de elementos, com valor aleatório
-
-            tempoInicial = clock();//tempo Atual
-            //printf("clock1: %lf\n", ((double)tempoInicial)/((CLOCKS_PER_SEC/1000)));
-            for(i = 0; i < n; i++) {
-                PONT p = contem(vBusca[i], r);
-            }
-            tempoBusca = clock() - tempoInicial;//tempo da função de busca
-
-            tempoInicial = clock();
-            for(i = 0; i < n; i++) {
-                r = removerNo(r, vRemocao[i]);
-            }
-            tempoRemocao = clock() - tempoInicial;//tempo da função de remoção
-            //printf("Tempo de execução da funcao de insercao em milissegundos: %lf\n", ((double)tempoInsercao)/((CLOCKS_PER_SEC/1000)));
-           // printf("Tempo de execução da funcao de busca em milissegundos: %lf\n", ((double)tempoBusca)/((CLOCKS_PER_SEC/1000)));
-           // printf("Tempo de execução da funcao de remocao em milissegundos: %lf\n", ((double)tempoRemocao)/((CLOCKS_PER_SEC/1000)));
-            printf("%d\n", (int)(((double)tempoBusca)/((CLOCKS_PER_SEC/1000))));
-            printf("%d\n", (int)(((double)tempoInsercao)/((CLOCKS_PER_SEC/1000))));
-            printf("%d\n", (int)((double)tempoRemocao)/((CLOCKS_PER_SEC/1000)));
-            printf("Operacoes:\n");
-            printf("qtdOpInserc: %d\n", qtdOperacoesInsercao);
-            printf("qtdOpBusca: %d\n", qtdOperacoesBusca);
-
-
-            qtdOperacoesInsercao = 0;
-            printf("\n");
+    for(i = 0; i < n; i++){
+        v[i] = rand() % n;
     }
+
+    /**
+     * Insere os n elementos: n = 100, 1000 e 100000
+     */
+    for(i = 0; i < n; i++){
+        PONT no = criarNovoNo(v[i]);
+        r = adicionar(r, no);
+    }
+
+    printf("Busca ------------------------------------------------------------------\n");
+
+    for(int j = 0; j < 30; j++){
+        /**
+        * Marcação de tempo para a operação de Busca
+        */
+        x = rand() % n;
+
+        //clock_t tempoInicial = clock();
+        tempoInicial = clock();
+
+        PONT p = contem(x, r);
+        /*if(p){
+            printf("valor: %d\n", p->chave);
+        }else{
+            printf("nao encontrado!\n");
+        }*/
+
+        tempoFinal = clock() - tempoInicial;
+
+        printf("tempo de busca do elemento %d: %.20lf Milissegundos\n", x, ((double)tempoFinal)/((CLOCKS_PER_SEC/1000)));
+        printf("Quantidade de operações Busca %d\n", qtdOperacoesBusca);
+        qtdOperacoesBusca = 0;
+    }
+
+    printf("Insercao------------------------------------------------------------------\n");
+    for(int j = 0; j < 30; j++){
+        /**
+      * Marcação de tempo para a operação de Inserção
+      */
+        x = rand() % n;
+
+        //clock_t tempoInicial = clock();
+        tempoInicial = clock();
+
+        PONT no = criarNovoNo(x);
+        r = adicionar(r, no);;
+        //printf("valor: %d\n", r->chave);
+
+        tempoFinal = clock() - tempoInicial;
+
+        printf("tempo de insercao do elemento %d: %.20lf Milissegundos\n", x, ((double)tempoFinal)/((CLOCKS_PER_SEC/1000)));
+        printf("Quantidade de operações insercao %d\n",qtdOperacoesInsercao);
+        qtdOperacoesInsercao = 0;
+    }
+
+
+    printf("Remocao------------------------------------------------------------------\n");
+    for(int j = 0; j < 30; j++){
+        /**
+      * Marcação de tempo para a operação de Remocao
+      */
+        //x = rand() % n;
+
+        //clock_t tempoInicial = clock();
+        tempoInicial = clock();
+
+        r = removerNo(r, x);
+        /*if(r){
+            printf("valor: %d\n", r->chave);
+        }else{
+            printf("falha");
+        }*/
+
+        tempoFinal = clock() - tempoInicial;
+
+        printf("tempo de Remocao do elemento %d: %.20lf Milissegundos\n", x, ((double)tempoFinal)/((CLOCKS_PER_SEC/1000)));
+        printf("Quantidade de operações Remocao %d\n",qtdOperacoesRemocao);
+        qtdOperacoesRemocao = 0;
+    }
+    /**
+     * Marcação de tempo para a operação de Remocao
+     */
+    //x = rand() % 100000;
+    //tempoInicial = clock();
+
+    // PONT no = criarNovoNo(x);
+    // r = adicionar(r, no);;
+
+
+    //    r = removerNo(r, vRemocao[i]);
+
+    printf("\n");
+
 
 
     scanf("%*c");
