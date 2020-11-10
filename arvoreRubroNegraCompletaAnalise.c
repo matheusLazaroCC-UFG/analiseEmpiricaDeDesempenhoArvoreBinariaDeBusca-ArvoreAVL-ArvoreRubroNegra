@@ -63,20 +63,8 @@ void inserirCaso2 (structNo* avo, structNo* tio, structNo* noPai, structNo* chav
 
 
 /**
-** Retorna a altura do no fornecido
-**/
-int alturaNo(structNo* no);
-
-
-/**
-** Retorna a altura preta da arvore
-**/
-int alturaPreto(structNo* no);
-
-/**
 ** Retorna o no anterior, se existente
 **/
-structNo* noAnterior(structNo* no);
 
 /**
 ** Retorna o no sucessor, se existente
@@ -110,29 +98,6 @@ void casoDireitaEsquerda(structNo* raiz, structNo* pivo);
 **/
 int max(int valor1, int valor2);
 
-/**
- * Atualiza a quantidade de nós da subárvore do nó passado por referência,
- * com o valor a ser atualizado.
- */
-void atualizarContagemNo(structNo* no, int valorAtualizar);
-
-/**
- * Atualiza a quantidade de nós varmelhos da subárvore do nó passado
- * por referência, com o valor a ser atualizado.
- */
-void atualizarContagemNoVermelho(structNo* no, int valorAtualizar);
-
-/**
-** Imprimir a arvore transversal
-** 1. Inorder
-** 2. Preorder
-** 3. Postorder
-**/
-void imprimirEmOrdem(structNo* no);
-void imprimirPreOrdem(structNo* no);
-void imprimirPosOrdem(structNo* no);
-
-void imprimirArvore(structNo* no);
 
 
 /**
@@ -172,8 +137,6 @@ int main() {
 
     srand(time(NULL));
 
-    double media = 0;
-    double media2 = 0;
 
     for(int i = 0; i < 30; i++){
         printf("Arvore %d\n", i+1);
@@ -220,7 +183,6 @@ int main() {
 
         printf("tempo de Inserção do elemento %d: %.20lf Milissegundos\n", x, ((double)tempoFinal)/((CLOCKS_PER_SEC/1000)));
         printf("quantidade de operacoes - insercao do elemento %d: %d\n", x, qtdOperacoesInsercao);
-        media2 += ((double)tempoFinal)/((CLOCKS_PER_SEC/1000));
 
         /**
         * Marcação de tempo para a operação de Remoção
@@ -240,7 +202,6 @@ int main() {
         printf("tempo de remocao do elemento %d: %.20lf Milissegundos\n", x, ((double)tempoFinal)/((CLOCKS_PER_SEC/1000)));
         printf("quantidade de operacoes - remocao do elemento %d: %d\n", x, qtdOperacoesRemocao);
         printf("\n\n\n");
-        media += ((double)tempoFinal)/((CLOCKS_PER_SEC/1000));
 
         qtdOperacoesRemocao = 0;
         qtdOperacoesBusca = 0;
@@ -249,18 +210,8 @@ int main() {
         resultado = NULL;
     }
 
-    printf("media remoção: %lf\n", media/30);
-    printf("media insercao: %lf\n", media2/30);
-
-
     return sucesso;
 }
-
-
-
-
-
-
 
 
 int criarStructNo(structNo** noCriado, int valor) {
@@ -336,68 +287,6 @@ int max(int valor1, int valor2) {
     }
 }
 
-int alturaNo(structNo* no) {
-    if (no == NULL){
-        return 0;
-    }
-
-    if (no->esquerda == NULL && no->direita == NULL){
-        return 0;
-    }
-
-    return (1 + max(alturaNo(no->esquerda), alturaNo(no->direita)));
-}
-
-int alturaPreto(structNo* no) {
-    int altura = 0;
-
-    if (no == NULL){
-        return altura;
-    }
-
-    if (no->cor == preto) {
-        altura = 1;
-    }else{
-        altura = 0;
-    }
-
-    if (no->esquerda != NULL){
-        return altura + alturaPreto(no->esquerda);
-    }else
-    if (no->direita != NULL){
-        return altura + alturaPreto(no->direita);
-    }else{
-        return altura;
-    }
-}
-
-structNo* noAnterior(structNo* no) {
-    if(no->esquerda != NULL) {
-        no = no->esquerda;
-
-        while ( no->direita != NULL) {
-            no = no->direita;
-        }
-
-        return no;
-    }else
-    if ( no->pai != NULL) {
-        if (no->pai->direita == no){
-            no = no->pai;
-        }else{
-            while (no->pai->esquerda == no) {
-                no = no->pai;
-            }
-
-            no = no->pai;
-        }
-
-        return no;
-    }
-
-    return NULL;
-}
-
 structNo* noSucessor(structNo* no) {
     if (no->direita != NULL) {
         no = no->direita;
@@ -424,21 +313,6 @@ structNo* noSucessor(structNo* no) {
 
     return NULL;
 }
-
-void atualizarContagemNo(structNo* no, int valorAtualizar) {
-
-    if (no->pai != NULL){
-        atualizarContagemNo(no->pai, valorAtualizar);
-    }
-}
-
-void atualizarContagemNoVermelho(structNo* no, int valorAtualizar) {
-
-    if (no->pai != NULL){
-        atualizarContagemNoVermelho(no->pai, valorAtualizar);
-    }
-}
-
 
 void rotacionarDireita (structNo* raiz, structNo* pivo) {
     structNo* subB = pivo->direita;
@@ -1002,42 +876,3 @@ void removerCaso2_2_2(structNo* noPai, structNo* irmao) {
         removerCasos(noPai, irmao);
     }
 }
-
-void imprimirPosOrdem(structNo* no){
-    if(no == NULL){
-        return;
-    }
-    imprimirPosOrdem(no->esquerda);
-    imprimirPosOrdem(no->direita);
-    printf(" %d", no->valor);
-}
-
-void imprimirPreOrdem(structNo* no){
-    if(no == NULL){
-        return;
-    }
-    printf(" %d", no->valor);
-    imprimirPreOrdem(no->esquerda);
-    imprimirPreOrdem(no->direita);
-}
-
-void imprimirEmOrdem(structNo* no){
-    if(no == NULL){
-        return;
-    }
-    imprimirEmOrdem(no->esquerda);
-    printf(" %d", no->valor);
-    imprimirEmOrdem(no->direita);
-}
-
-void imprimirArvore(structNo* no){
-    if(no != NULL){
-        printf("%i", no->valor);
-        printf("[");
-        imprimirArvore(no->esquerda);
-        imprimirArvore(no->direita);
-        printf("]");
-    }
-}
-
-

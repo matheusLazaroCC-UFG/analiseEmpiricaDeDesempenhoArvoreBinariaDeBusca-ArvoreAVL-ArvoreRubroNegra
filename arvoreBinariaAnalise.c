@@ -81,105 +81,6 @@ int altura(PONT r){
 
     return (alturaDireita + 1);
 }
-/*
-bool balanceada(PONT r){
-    if (r == NULL) {
-        return true;
-    }else
-    if (r->esquerda == NULL && r->direita == NULL) {
-        return true;
-    }else
-    if (r->esquerda != NULL && r->direita != NULL){
-        int diferenca = altura(r->esquerda) - altura(r->direita);
-        return (balanceada(r->esquerda) && balanceada(r->direita) && ((diferenca ==0) || (diferenca ==1) || (diferenca == -1)));
-    }else
-    if (r->esquerda != NULL) {
-        return (altura(r->esquerda) == 1);
-    }else{
-        return (altura(r->esquerda) == 1);
-    }
-}
-
-boolean perfbalanceada(PONT r){
-    if (r == NULL)
-        return true;
-    else
-    if (r->esquerda == NULL && r->direita==NULL)
-        return true;
-    else
-    if (r->esquerda!=NULL && r->direita!=NULL)
-    {
-        int diferenca = numeroDeNos(r->esquerda) - numeroDeNos(r->direita);
-        return (balanceada(r->esquerda) && balanceada(r->direita) && ((diferenca ==0)|| (diferenca ==1) || (diferenca == -1)));
-    }
-    return(perfbalanceada(r->esquerda) && perfbalanceada(r->direita));
-    else{
-        if (r->esq != NULL){
-            return (numeronos(r->esq) == 1);
-
-        }else
-            return (numeronos(r->esq) == 1);
-    }
-
-}
-
-boolean insere_dir(tree pai, tipo_elem item){
-    if (pai == NULL)
-        return FALSE;
-    if (pai->dir != NULL) {
-        printf("já tem filho à direita");
-        return FALSE;
-    }
-    tree no = malloc(sizeof(no));
-    no->esq = NULL;
-    no->dir = NULL;
-    no->info = item;
-    pai->dir = no;
-    return TRUE;
-}
-
-int nivel(tree t, tipo_elem item){
-    int n;
-    boolean achou = FALSE;
-    n = 0;
-    travessia(t, &n, item, &achou);
-    return n;
-}
-
-percorre a árvore com raiz em ptr em Pré-ordem,
-procurando pelo item dado e calculando e retornando seu
-nível na variável n
-void travessia(tree ptr, int *niv, tipo_elem item, boolean *achou){
-    if (ptr != NULL){
-        (*niv) ++;
-        if (ptr->info == item){
-            *achou = TRUE;
-            return;
-        }
-        travessia(ptr->esq, niv, item, achou);
-        if (!*achou){
-            travessia(ptr->dir, niv, item, achou);
-            if (!*achou)
-                (*niv) --;
-        }
-    }
-    return;
-}
-
-void destruir(tree r){
-    if (!vazia(r)){
-        destruir(r->esq);
-        destruir(r->dir);
-        free(r);
-    }
-    r = NULL;
-}
-
-*/
-
-
-
-
 
 void imprimirArvore(PONT raiz){
     if(raiz != NULL){
@@ -290,7 +191,6 @@ void imprimirEmOrdem(PONT no){
 
 int main(){
     int i, x;
-    //clock_t tempo, tempoInicial, tempoFinal, tempoInsercao, tempoBusca, tempoRemocao;
     clock_t tempoInicial, tempoFinal, tempoInsercao, tempoBusca, tempoRemocao;
 
 
@@ -323,15 +223,9 @@ int main(){
         */
         x = rand() % n;
 
-        //clock_t tempoInicial = clock();
         tempoInicial = clock();
 
         PONT p = contem(x, r);
-        /*if(p){
-        printf("valor: %d\n", p->chave);
-        }else{
-        printf("nao encontrado!\n");
-        }*/
 
         tempoFinal = clock() - tempoInicial;
 
@@ -345,20 +239,16 @@ int main(){
         */
         x = rand() % n;
 
-        //clock_t tempoInicial = clock();
         tempoInicial = clock();
 
         PONT no = criarNovoNo(x);
         r = adicionar(r, no);;
-        //printf("valor: %d\n", r->chave);
+
 
         tempoFinal = clock() - tempoInicial;
 
         printf("tempo de insercao do elemento %d: %.20lf Milissegundos\n", x, ((double)tempoFinal)/((CLOCKS_PER_SEC/1000)));
         printf("Quantidade de operações insercao %d\n",qtdOperacoesInsercao);
-        //qtdOperacoesInsercao = 0;
-
-
 
         printf("Remocao------------------------------------------------------------------\n");
 
@@ -367,15 +257,10 @@ int main(){
         */
         x = rand() % n;
 
-        //clock_t tempoInicial = clock();
         tempoInicial = clock();
 
         r = removerNo(r, x);
-        /*if(r){
-        printf("valor: %d\n", r->chave);
-        }else{
-        printf("falha");
-        }*/
+
 
         tempoFinal = clock() - tempoInicial;
 
@@ -388,13 +273,7 @@ int main(){
         free(r);
     }
 
-
-
-
-
     printf("\n");
-
-
 
     scanf("%*c");
     return 0;

@@ -323,11 +323,7 @@ int main(){
 
         qtdOperacoesRemocao = 0;
         qtdOperacoesBusca = 0;
-        //r = deletarNo(r, 10);
 
-        //printf("Travessia da pre-ordem depois de deletar o 10: ");
-        //preOrdem(r);
-        //imprimirArvore(r);
         free(r);
 
     }
