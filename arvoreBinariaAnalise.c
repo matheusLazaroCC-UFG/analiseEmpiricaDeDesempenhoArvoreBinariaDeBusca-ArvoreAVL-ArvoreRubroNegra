@@ -28,11 +28,11 @@ PONT adicionar(PONT raiz, PONT no){
         return no;
     }
     if(no->chave < raiz->chave){
-        qtdOperacoesInsercao++;//Descer de nível
-        raiz->esquerda = adicionar(raiz->esquerda, no);
+        qtdOperacoesInsercao++;
+        raiz->esquerda = adicionar(raiz->esquerda, no);//Descer de nível
     }else{
-        qtdOperacoesInsercao++;//Descer de nível
-        raiz->direita = adicionar(raiz->direita, no);
+        qtdOperacoesInsercao++;
+        raiz->direita = adicionar(raiz->direita, no);//Descer de nível
     }
     return raiz;
 }
@@ -199,9 +199,9 @@ PONT buscarNo(PONT raiz, tipoChave chave, PONT *pai) {
             return atual;
         }
         if (chave < atual->chave) {
-            atual = atual->esquerda;
+            atual = atual->esquerda; qtdOperacoesRemocao++;
         } else {
-            atual = atual->direita;
+            atual = atual->direita; qtdOperacoesRemocao++;
         }
     }
     return NULL;
@@ -215,31 +215,33 @@ PONT removerNo(PONT raiz, tipoChave chave){
     }
     if(!no->esquerda || !no->direita){
         if(!no->esquerda){
+            qtdOperacoesRemocao++;
             q = no->direita;
         }else{
+            qtdOperacoesRemocao++;
             q = no->esquerda;
         }
     }else{
         p = no;
-        q = no->esquerda;
+        q = no->esquerda; qtdOperacoesRemocao++;
         while(q->direita){
             p = q;
-            q = q->direita;
+            q = q->direita; qtdOperacoesRemocao++;
         }
         if(p != no){
             p->direita = q->esquerda;
-            q->esquerda = no->esquerda;
+            q->esquerda = no->esquerda; qtdOperacoesRemocao++;
         }
-        q->direita = no->direita;
+        q->direita = no->direita; qtdOperacoesRemocao++;
     }
     if(!pai){
         free(no);
         return q;
     }
     if(chave < pai->chave){
-        pai->esquerda = q;
+        pai->esquerda = q; qtdOperacoesRemocao++;
     }else{
-        pai->direita = q;
+        pai->direita = q; qtdOperacoesRemocao++;
     }
     free(no);
     return raiz;
@@ -289,31 +291,33 @@ void imprimirEmOrdem(PONT no){
 int main(){
     int i, x;
     //clock_t tempo, tempoInicial, tempoFinal, tempoInsercao, tempoBusca, tempoRemocao;
-    clock_t tempoInicial, tempoFinal;
-    PONT r = iniciar();
+    clock_t tempoInicial, tempoFinal, tempoInsercao, tempoBusca, tempoRemocao;
+
 
     int *v, n;
     printf("Digite a quantidade de elementos: ");
     scanf("%d%*c", &n);
-    v = (int*) malloc(sizeof(int*) * n);
 
     srand(time(NULL));
 
-    for(i = 0; i < n; i++){
-        v[i] = rand() % n;
-    }
-
-    /**
-     * Insere os n elementos: n = 100, 1000 e 100000
-     */
-    for(i = 0; i < n; i++){
-        PONT no = criarNovoNo(v[i]);
-        r = adicionar(r, no);
-    }
-
-    printf("Busca ------------------------------------------------------------------\n");
-
     for(int j = 0; j < 30; j++){
+        PONT r = iniciar();
+        v = (int*) malloc(sizeof(int*) * n);
+        for(i = 0; i < n; i++){
+            v[i] = rand() % n;
+        }
+
+        /**
+        * Insere os n elementos: n = 100, 1000 e 100000
+        */
+        for(i = 0; i < n; i++){
+            PONT no = criarNovoNo(v[i]);
+            r = adicionar(r, no);
+        }
+        qtdOperacoesInsercao = 0;
+
+        printf("Busca ------------------------------------------------------------------\n");
+
         /**
         * Marcação de tempo para a operação de Busca
         */
@@ -324,9 +328,9 @@ int main(){
 
         PONT p = contem(x, r);
         /*if(p){
-            printf("valor: %d\n", p->chave);
+        printf("valor: %d\n", p->chave);
         }else{
-            printf("nao encontrado!\n");
+        printf("nao encontrado!\n");
         }*/
 
         tempoFinal = clock() - tempoInicial;
@@ -334,13 +338,11 @@ int main(){
         printf("tempo de busca do elemento %d: %.20lf Milissegundos\n", x, ((double)tempoFinal)/((CLOCKS_PER_SEC/1000)));
         printf("Quantidade de operações Busca %d\n", qtdOperacoesBusca);
         qtdOperacoesBusca = 0;
-    }
 
-    printf("Insercao------------------------------------------------------------------\n");
-    for(int j = 0; j < 30; j++){
+        printf("Insercao------------------------------------------------------------------\n");
         /**
-      * Marcação de tempo para a operação de Inserção
-      */
+        * Marcação de tempo para a operação de Inserção
+        */
         x = rand() % n;
 
         //clock_t tempoInicial = clock();
@@ -354,25 +356,25 @@ int main(){
 
         printf("tempo de insercao do elemento %d: %.20lf Milissegundos\n", x, ((double)tempoFinal)/((CLOCKS_PER_SEC/1000)));
         printf("Quantidade de operações insercao %d\n",qtdOperacoesInsercao);
-        qtdOperacoesInsercao = 0;
-    }
+        //qtdOperacoesInsercao = 0;
 
 
-    printf("Remocao------------------------------------------------------------------\n");
-    for(int j = 0; j < 30; j++){
+
+        printf("Remocao------------------------------------------------------------------\n");
+
         /**
-      * Marcação de tempo para a operação de Remocao
-      */
-        //x = rand() % n;
+        * Marcação de tempo para a operação de Remocao
+        */
+        x = rand() % n;
 
         //clock_t tempoInicial = clock();
         tempoInicial = clock();
 
         r = removerNo(r, x);
         /*if(r){
-            printf("valor: %d\n", r->chave);
+        printf("valor: %d\n", r->chave);
         }else{
-            printf("falha");
+        printf("falha");
         }*/
 
         tempoFinal = clock() - tempoInicial;
@@ -380,18 +382,15 @@ int main(){
         printf("tempo de Remocao do elemento %d: %.20lf Milissegundos\n", x, ((double)tempoFinal)/((CLOCKS_PER_SEC/1000)));
         printf("Quantidade de operações Remocao %d\n",qtdOperacoesRemocao);
         qtdOperacoesRemocao = 0;
+
+        printf("Teste %d\n\n\n", j+1);
+        free(v);
+        free(r);
     }
-    /**
-     * Marcação de tempo para a operação de Remocao
-     */
-    //x = rand() % 100000;
-    //tempoInicial = clock();
-
-    // PONT no = criarNovoNo(x);
-    // r = adicionar(r, no);;
 
 
-    //    r = removerNo(r, vRemocao[i]);
+
+
 
     printf("\n");
 
